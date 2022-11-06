@@ -18,19 +18,19 @@ Languages I plan to use in no particular order:
 - Kotlin
 - Python
 - JavaScript
-- TypeScript (Yes, I'm counting this separately. I need as many languages as possible)
+- TypeScript *(Yes, I'm counting this separately. I need as many languages as possible)*
 - Lua
-- Teal (Yup, again. Counting it separately)
+- Teal *(Yup, again. Counting it separately)*
 - Haskell
 - Scala
 - Prolog
 - Elixir
-- Bash (No I'm not so cheap as to count POSIX shell separately)
+- Bash *(No I'm not so cheap as to count POSIX shell separately)*
 - x86 AT&T Assembly
 - Go
 - Dart
 - CoffeeScript
 - PureScript
-- Maybe torture myself by trying to solve one with Brainfuck?
-- Maybe Swift
-- Maybe R
+- *Maybe torture myself by trying to solve one with* Brainfuck?
+- *Maybe* Swift
+- *Maybe* R
