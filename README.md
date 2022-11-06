@@ -8,7 +8,7 @@ Try to solve every day in a different programming language and see how far I get
 
 ### I will be listing here which language I used for which day:
 
-- Day 1: -
+- **Day 1**: -
 
 ### Languages I plan to use in no particular order:
 - C
