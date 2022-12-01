@@ -18,7 +18,7 @@ defmodule Calories do
 
   def part2() do
     {:ok, content} = File.read("input")
-    
+
     dwarfs = String.split(content, "\n\n", trim: true)
     |> Enum.map(fn x ->
       String.split(x, "\n", trim: true)
@@ -26,9 +26,10 @@ defmodule Calories do
       |> Enum.map(fn {x, _} -> x end)
     end)
     |> Enum.map(&Enum.sum/1)
-    |> Enum.sort_by(fn x -> -x end)
 
-    [d1 | [ d2 | [ d3 | _ ]]] = dwarfs
-    Enum.sum [ d1, d2, d3 ]
+    dwarfs
+    |> Enum.sort_by(&-/1) # Sort by negated elements. e.g. descending order
+    |> Enum.take(3)
+    |> Enum.sum
   end
 end
