@@ -28,6 +28,7 @@ Try to solve every day in a different programming language and see how far I get
 - Lua
 - Teal *(Yup, again. Counting it separately)*
 - Haskell
+- Elm
 - Scala
 - Prolog
 - Elixir
