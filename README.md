@@ -22,26 +22,27 @@ Try to solve every day in a different programming language and see how far I get
 - Vala
 - Haxe
 - Kotlin
+- Lua
+- Teal *(Yup, again. Counting it separately)*
 - Python
 - JavaScript
 - TypeScript *(Yes, I'm counting this separately. I need as many languages as possible)*
-- Lua
-- Teal *(Yup, again. Counting it separately)*
-- Haskell
+- CoffeeScript
+- PureScript
 - Elm
+- Haskell
 - Scala
-- Prolog
 - Elixir
 - Erlang
+- Prolog
 - Bash *(No I'm not so cheap as to count POSIX shell separately)*
 - x86 AT&T Assembly
 - Go
 - Dart
-- CoffeeScript
-- PureScript
 - Scratch
 - Spreadsheet
 - *Maybe torture myself by trying to solve one with* Brainfuck?
 - *Maybe* Swift
+- *Maybe* Clojure
 - *Maybe* R
 - *Maybe* Fortran
