@@ -1,7 +1,8 @@
 .section .data
 	filename:	.asciz "input"
 	lines:		.quad 2500	# Length of the file hardcoded
-	#filename:	.asciz "test-input"
+	#filename:	.asciz "test-input1"
+	#filename:	.asciz "test-input2"
 	#lines:		.quad 9		# Length of the file hardcoded
 	total:		.quad 0
 	int_template:	.asciz "%d\n"
@@ -36,7 +37,7 @@ main:
 		syscall
 
 		movq	$line, %rdi
-		call	solve
+		call	part2
 
 		decq	%rbx
 	jnz	read_loop
@@ -62,7 +63,7 @@ exit:
 	movq	%rbp, %rsp
 	popq	%rbp
 
-solve:
+part1:
 	# Prologue
 	pushq	%rbp
 	movq	%rsp, %rbp
@@ -84,7 +85,7 @@ solve:
 	# 3 - scissors  #
 	#---------------#
 
-	addq	%r13, total
+	addq	%r13, total		# Add the bonus for what we played
 	
 	cmpb	%r13b, %r12b		# If you play the same, it's a draw
 	je	draw
@@ -116,7 +117,70 @@ solve:
 		jmp	end_win_lose_draw
 	end_win_lose_draw:
 	
+	popq	%r13
+	popq	%r12
+
+	# Epilogue
+	movq	%rbp, %rsp
+	popq	%rbp
+
+	retq
+
+part2:
+	# Prologue
+	pushq	%rbp
+	movq	%rsp, %rbp
+
+	pushq	%r12
+	pushq	%r13
+
+	movzbq	0(%rdi), %r12	# R12B is the opponent's play
+	movzbq	2(%rdi), %r13	# R13B is the outcome
+
+	subb	$'A, %r12b
+	subb	$'X, %r13b
+	incb	%r12b
+
+	#--------------------------#
+	# 1 - rock       0 - lose  #
+	# 2 - paper      1 - draw  #
+	# 3 - scissors   2 - win   #
+	#--------------------------#
+
+	addq	%r13, total
+	addq	%r13, total
+	addq	%r13, total		# Add the bonus for the outcome
+	
+	# RAX is your play
+
+	cmpb	$1, %r13b		# If it needs to be a draw
+	cmoveq	%r12, %rax		# Then play the same
+	je	end_win_lose_draw2
+	cmpb	$0, %r13b		# If you need to lose
+	je	lose2
+	cmpb	$2, %r13b		# If you need to win
+	je	win2
+
+	win2:
+		movq	$1, %rcx
+		movb	%r12b, %al	# Set your move to the enemy's move
+		incb	%al		# +1
+		cmpb	$4, %al		# But if it overflows
+		cmoveq	%rcx, %rax	# Then set it to 1
+		jmp	end_win_lose_draw2
+	lose2:
+		movq	$3, %rcx
+		movb	%r12b, %al	# Set your move to the enemy's move
+		decb	%al		# -1
+		cmpb	$0, %al		# But if it overflows
+		cmovzq	%rcx, %rax	# Then set it to 3
+		jmp	end_win_lose_draw2
+	end_win_lose_draw2:
+	
+	addq	%rax, total
+
 /*
+	pushq	%rax
 	subq	$8, %rsp
 	movb	%r12b, (%rsp)
 	addb	$'0, (%rsp)
@@ -127,8 +191,9 @@ solve:
 	syscall
 	addq	$8, %rsp
 
+	popq	%rax
 	subq	$8, %rsp
-	movb	%r13b, (%rsp)
+	movb	%al, (%rsp)
 	addb	$'0, (%rsp)
 	movq	$1, %rdx	# Argument #3: buffer size
 	movq	%rsp, %rsi	# Argument #2: data to write

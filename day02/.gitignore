@@ -1,2 +1,5 @@
 # Resulting binary
 app.out
+
+# Swap files
+*.swp
