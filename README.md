@@ -9,7 +9,7 @@ Try to solve every day in a different programming language and see how far I get
 ### I will be listing here which language I used for which day:
 
 - **Day 1**: Elixir - I already wish I could solve more days in Elixir. It seems nice.
-- **Day 2**: x86 GAS Assembly
+- **Day 2**: x86 GAS Assembly - Yup went about as poorly as expected. Would not recommend.
 - **Day 3**: -
 
 ### Languages I plan to use in no particular order:
