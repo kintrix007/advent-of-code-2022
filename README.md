@@ -39,6 +39,8 @@ Try to solve every day in a different programming language and see how far I get
 - Dart
 - CoffeeScript
 - PureScript
+- Scratch
+- Spreadsheet
 - *Maybe torture myself by trying to solve one with* Brainfuck?
 - *Maybe* Swift
 - *Maybe* R
