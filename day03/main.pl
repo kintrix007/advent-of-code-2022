@@ -15,9 +15,8 @@ main :-
 %!  part1(+ValueLines:list(list(Int)), -Result: Int) is deterministic.
 part1(Lines, Result) :-
     maplist(part1_line, Lines, Duplicates),
-    (sum_list(Duplicates, Result); Result = -1), !.
-    % [Line|_] = Lines,
-    % part1_line(Line, Result).
+    sum_list(Duplicates, Result), !.
+part1(_, -1).
 
 %!  part1_line(+Values:list(Int), -Result:Int) is semideterministic
 part1_line(Values, Result) :-
