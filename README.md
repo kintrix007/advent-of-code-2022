@@ -10,7 +10,7 @@ Try to solve every day in a different programming language and see how far I get
 
 - **Day 1**: Elixir - I already wish I could solve more days in Elixir. It seems nice.
 - **Day 2**: x86 GAS Assembly - Yup went about as poorly as expected. Would not recommend.
-- **Day 3**: SWI Prolog
+- **Day 3**: SWI Prolog - Honestly, this was a lot more fun than I expected. It was well suited for the problem too.
 - **Day 4**: -
 
 ### Languages I plan to use in no particular order:
