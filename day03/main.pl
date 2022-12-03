@@ -2,22 +2,42 @@ main :-
     open('input', read, FileStream),
     read_lines(FileStream, CharcodeLines),
     close(FileStream), !,
-    writeln('---'),
-    maplist(convert_to_values, CharcodeLines, ValueLines),
+    maplist(convert_to_values, CharcodeLines, Lines),
     
     % forall(member(X, ValueLines), writeln(X)),
 
-    part1(ValueLines, Part1),
-    part2(ValueLines, Part2),
+    part1(Lines, Part1),
+    part2(Lines, Part2),
 
     write('Part 1: '), writeln(Part1),
-    write('Part 2: '), writeln(Part2).
+    write('Part 2: '), writeln(Part2), !.
 
-%!  part1(+ValueLines:list(list(Int)), Result: Int) is deterministic.
-part1(ValueLines, Result) :- Result = 'None'.
+%!  part1(+ValueLines:list(list(Int)), -Result: Int) is deterministic.
+part1(Lines, Result) :-
+    maplist(part1_line, Lines, Duplicates),
+    (sum_list(Duplicates, Result); Result = -1), !.
+    % [Line|_] = Lines,
+    % part1_line(Line, Result).
 
-%!  part2(+ValueLines:list(list(Int)), Result: Int) is deterministic.
-part2(ValueLines, Result) :- Result = 'None'.
+%!  part1_line(+Values:list(Int), -Result:Int) is semideterministic
+part1_line(Values, Result) :-
+    length(Values, Len),
+    Middle is Len/2,
+    split_at(Middle, Values, First, Second),
+    % write(First), write(' | '), writeln(Second),
+    member(Result, First), member(Result, Second), !.
+
+%!  part2(+ValueLines:list(list(Int)), -Result: Int) is deterministic.
+part2(ValueLines, Result) :- length(ValueLines, _), Result = 'None'.
+
+%!  split_at(+N:Int, +List:list, -Init:list, -Tail:list) is semideterministic.
+split_at(N, List, Init, Tail) :- N =< 0, !, N =:= 0, Init = [], Tail = List.
+split_at(N, [H|Rest], Init, Tail) :-
+    Rem is N-1,
+    Init = [H|Following],
+    split_at(Rem, Rest, Following, Tail).
+
+
 
 %!  read_lines(+Stream:stream, -Lines:list(list(Int)))) is deterministic.
 read_lines(Stream, []) :- at_end_of_stream(Stream).
