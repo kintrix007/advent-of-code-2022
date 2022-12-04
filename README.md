@@ -11,8 +11,8 @@ Try to solve every day in a different programming language and see how far I get
 - **Day 1**: Elixir - I already wish I could solve more days in Elixir. It seems nice.
 - **Day 2**: x86 GAS Assembly - Yup went about as poorly as expected. Would not recommend.
 - **Day 3**: SWI Prolog - Honestly, this was a lot more fun than I expected. It was well suited for the problem too.
-- **Day 4**: Erlang - No sure, it was not great nor terrible. Then again, the problem was super simple,
-  so biggest task was figuring out how to parse the file...
+- **Day 4**: Erlang - Not sure, it was not great nor terrible. Then again, the problem was super simple,
+  so the biggest task was figuring out how to parse the file...
 - **Day 5**: -
 
 ### Languages I plan to use in no particular order:
