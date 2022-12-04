@@ -4,7 +4,6 @@
 main() ->
     {ok, RawContents} = file:read_file("input"),
     Lines = string:split(string:trim(RawContents), "\n", all),
-    % io:format("~p~n", [Lines]),
     Pairs = [ parse_line(L) || L <- Lines ],
     % io:format("~p~n", [Pairs]),
     Part1 = part1(Pairs),
@@ -21,14 +20,25 @@ part1_line(First, Second) ->
         false -> 0
     end.
 
-part2(_) ->
-    error.
+part2(Ranges) ->
+    lists:sum([ part2_line(R1, R2) || {R1, R2} <- Ranges ]).
+
+part2_line(First, Second) ->
+    Contains = range_overlaps(First, Second),
+    case Contains of
+        true -> 1;
+        false -> 0
+    end.
+
+range_overlaps(Range, SubRange) ->
+    {range, S1, E1} = Range,
+    {range, S2, E2} = SubRange,
+    (S1 =< E2) and (E1 >= S2).
 
 range_contains(Range, SubRange) ->
     {range, S1, E1} = Range,
     {range, S2, E2} = SubRange,
-    (S1 =< S2) and (E2 =< E1).
-    
+    (S1 =< S2) and (E2 =< E1). 
 
 parse_line(Line) ->
     [FirstStr, SecondStr] = string:split(Line, ","),
@@ -39,4 +49,3 @@ parse_line(Line) ->
     First = {range, FirstStart, FirstEnd},
     Second = {range, SecondStart, SecondEnd},
     {First, Second}.
-
