@@ -1,7 +1,7 @@
 module Main (main) where
 
 import           Data.Char  (isDigit)
-import           Data.Maybe (fromJust, isJust)
+import           Data.Maybe (maybeToList)
 import qualified Data.Text  as T
 
 type Stack = [Char]
@@ -75,12 +75,8 @@ parse cont = (stacks, moves)
   where
     packed = T.pack cont
     [stacksStr, movesStr] = T.splitOn (T.pack "\n\n") packed
-    stacks = parseStacks stacksStr
-    moves = parseMoves $ T.strip movesStr
-
-parseMoves :: T.Text -> [Move]
-parseMoves packed =
-  map parseMove $ T.splitOn (T.pack "\n") packed
+    stacks = parseStacks . init . T.lines $ stacksStr
+    moves = map parseMove . T.lines $ T.strip movesStr
 
 parseMove :: T.Text -> Move
 parseMove text =
@@ -91,29 +87,25 @@ parseMove text =
     [fromStr, toStr] = T.splitOn (T.pack "to") rest
     [from, to, times] = map ((read :: String -> Int) . T.unpack) [fromStr, toStr, timesStr]
 
-parseStacks :: T.Text -> [Stack]
-parseStacks text =
-  internalParseStacks lines startStacks
+parseStacks :: [T.Text] -> [Stack]
+parseStacks lines =
+  internalParseStacks (reverse lines) startStacks
   where
-    lines = reverse . map (`T.append` T.pack " ") . init . T.splitOn (T.pack "\n") $ text
-    slots = (length . T.unpack . head $ lines) `div` 4
-    startStacks = map (const []) [0 .. slots]
+    -- We need +1 since it's not padded with spaces at the end
+    slots = (T.length (head lines) + 1) `div` 4
+    startStacks = map (const []) [1..slots]
 
 internalParseStacks :: [T.Text] -> [Stack] -> [Stack]
-internalParseStacks [] stacks = stacks
-internalParseStacks lines stacks =
-  internalParseStacks rest newStacks
+internalParseStacks [] stacks    = stacks
+internalParseStacks (l:lines) stacks =
+  internalParseStacks lines newStacks
   where
-    line : rest = lines
-    boxes = parseBoxes $ T.chunksOf 4 line
+    boxes = parseBoxes $ T.chunksOf 4 l
     newStacks =
-      [ if isJust box then fromJust box : stack else stack
-      | (stack, box) <- zip stacks boxes ]
+      [ maybeToList box ++ stack | (stack, box) <- zip stacks boxes ]
 
 parseBoxes :: [T.Text] -> [Maybe Char]
-parseBoxes = map parseBox
+parseBoxes = map (parseBox . (`T.index` 1))
   where
-    getBoxContent str = str `T.index` 1
-    parseBox str = case getBoxContent str of
-      ' ' -> Nothing
-      x   -> Just x
+    parseBox ' ' = Nothing
+    parseBox x = Just x
