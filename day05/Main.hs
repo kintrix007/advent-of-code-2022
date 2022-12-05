@@ -10,9 +10,18 @@ main :: IO ()
 main = do
     cont <- readFile "input"
     let (stacks, moves) =  parse cont
-    print moves
-    print stacks
+    putStr "Part 1: "
+    putStrLn $ part1 (stacks, moves)
+    putStr "Part 2: "
+    putStrLn $ part2 (stacks, moves)
 
+part1 :: ([[Char]], [Move]) -> String
+part1 (stacks, moves) =
+    "[None]"
+
+part2 :: ([[Char]], [Move]) -> String
+part2 (stacks, moves) =
+  "[None]"
 
 parse :: String -> ([[Char]], [Move])
 parse cont =
