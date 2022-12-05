@@ -1,0 +1,6 @@
+# Binary output
+Main
+
+# Build files
+*.o
+*.hi
