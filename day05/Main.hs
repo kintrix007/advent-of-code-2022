@@ -20,18 +20,27 @@ main = do
 part1 :: ([Stack], [Move]) -> String
 part1 (stacks, moves) =
     map (\(x:_) -> x) finalStacks
-    where finalStacks = foldl (\acc x -> applyMove x acc) stacks moves
+    where finalStacks = foldl (flip applyOneByOneMove) stacks moves
 
-applyMove :: Move -> [Stack] -> [Stack]
-applyMove (Move _ _ 0) stacks         = stacks
-applyMove (Move from to times) stacks =
-    applyMove (Move from to $ times-1) afterPush
+applyOneByOneMove :: Move -> [Stack] -> [Stack]
+applyOneByOneMove (Move _ _ 0) stacks         = stacks
+applyOneByOneMove (Move from to times) stacks =
+    applyOneByOneMove (Move from to $ times-1) afterPush
     where (afterPop, popped) = popFromIdx from stacks
           afterPush = pushToIdx to popped afterPop
 
 part2 :: ([Stack], [Move]) -> String
 part2 (stacks, moves) =
-    "[None]"
+    map (\(x:_) -> x) finalStacks
+    where finalStacks = foldl (flip applyChunkMove) stacks moves
+
+applyChunkMove :: Move -> [Stack] -> [Stack]
+applyChunkMove (Move _ _ 0) stacks = stacks
+applyChunkMove (Move from to times) stacks =
+  afterPush
+  where
+    (afterPop, popped) = chunkPopFromIdx from times stacks
+    afterPush = chunkPushToIdx to popped afterPop
 
 popFromIdx :: Int -> [Stack] -> ([Stack], Char)
 popFromIdx idx xs =
@@ -42,6 +51,19 @@ pushToIdx :: Int -> Char -> [Stack] -> [Stack]
 pushToIdx idx x xs =
   bef ++ (x:rest) : aft
   where (bef, rest:aft) = splitAt idx xs
+
+chunkPopFromIdx :: Int -> Int -> [Stack] -> ([Stack], [Char])
+chunkPopFromIdx idx amount xs =
+  (bef ++ rest : aft, popped)
+  where
+    (bef, stack : aft) = splitAt idx xs
+    (popped, rest) = splitAt amount stack
+
+chunkPushToIdx :: Int -> [Char] -> [Stack] -> [Stack]
+chunkPushToIdx idx x xs =
+  bef ++ (x ++ stack) : aft
+  where
+    (bef, stack : aft) = splitAt idx xs
 
 parse :: String -> ([Stack], [Move])
 parse cont = (stacks, moves)
