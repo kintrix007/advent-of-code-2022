@@ -1,8 +1,8 @@
 module Main (main) where
 
-import Data.Char (isDigit)
-import Data.Maybe (fromJust, isJust)
-import Data.Text qualified as T
+import           Data.Char  (isDigit)
+import           Data.Maybe (fromJust, isJust)
+import qualified Data.Text  as T
 
 type Stack = [Char]
 
@@ -108,8 +108,7 @@ internalParseStacks lines stacks =
     boxes = parseBoxes $ T.chunksOf 4 line
     newStacks =
       [ if isJust box then fromJust box : stack else stack
-        | (stack, box) <- zip stacks boxes
-      ]
+      | (stack, box) <- zip stacks boxes ]
 
 parseBoxes :: [T.Text] -> [Maybe Char]
 parseBoxes = map parseBox
@@ -117,4 +116,4 @@ parseBoxes = map parseBox
     getBoxContent str = str `T.index` 1
     parseBox str = case getBoxContent str of
       ' ' -> Nothing
-      x -> Just x
+      x   -> Just x
