@@ -13,8 +13,9 @@ Try to solve every day in a different programming language and see how far I get
 - **Day 3**: SWI Prolog - Honestly, this was a lot more fun than I expected. It was well suited for the problem too.
 - **Day 4**: Erlang - Not sure, it was not great nor terrible. Then again, the problem was super simple,
   so the biggest task was figuring out how to parse the file...
-- **Day 5**: Haskell
-- **Day 6**: -
+- **Day 5**: Haskell - I have yet again realized that I know less about Haskell than I wish to.
+- **Day 6**: Vala - Was kind of nice to use, nothing special. The "standard" library could use a bit more functionality.
+- **Day 7**: -
 
 ### Languages I plan to use in no particular order:
 - C
