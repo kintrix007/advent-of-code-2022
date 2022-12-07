@@ -34,7 +34,6 @@ while read l; do
 
         if [[ $filesize -ge $NEEDED ]] && [[ $filesize -le $SMALLEST ]]; then
 		SMALLEST=$filesize
-		echo a >/dev/null
         fi
 done <<< $DU
 
