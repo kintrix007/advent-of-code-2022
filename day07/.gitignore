@@ -1,0 +1,5 @@
+# The generate filesystem
+fs
+
+# the vim swap files
+*.swp

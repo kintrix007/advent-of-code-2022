@@ -1,0 +1,20 @@
+$ cd /
+$ ls
+150000 isnotcounted
+dir dir1
+2000 a
+3000 b
+5000 c
+$ cd dir1
+$ ls
+1000 a
+dir subdir1
+dir subdir2
+$ cd subdir1
+$ ls
+100 asdf
+$ cd ..
+$ cd subdir2
+$ ls
+750 file1
+250 file2
