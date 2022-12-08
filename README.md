@@ -17,7 +17,8 @@ Try to solve every day in a different programming language and see how far I get
 - **Day 6**: Vala - Was kind of nice to use, nothing special. The "standard" library could, of course,
   use a bit more functionality.
 - **Day 7**: Bash
-- **Day 7**: -
+- **Day 8**: Scratch
+- **Day 9**: -
 
 ### Languages I plan to use in no particular order:
 - C
