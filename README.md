@@ -16,8 +16,8 @@ Try to solve every day in a different programming language and see how far I get
 - **Day 5**: Haskell - I have yet again realized that I know less about Haskell than I wish to.
 - **Day 6**: Vala - Was kind of nice to use, nothing special. The "standard" library could, of course,
   use a bit more functionality.
-- **Day 7**: Bash
-- **Day 8**: Scratch
+- **Day 7**: Bash - Well, given the way I chose to implement it, it could not have gone much worse this.
+- **Day 8**: Scratch - I took a break twice considering if I should just give up... But after all it ended up being kind of fun...?
 - **Day 9**: -
 
 ### Languages I plan to use in no particular order:
