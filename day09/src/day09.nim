@@ -1,9 +1,8 @@
-import strutils
-import strformat
+import strutils, strformat
 import sequtils
-import fusion/matching
 import std/sets
 import sugar
+import fusion/matching
 
 type
   Coord = tuple[x: int, y: int]
@@ -22,13 +21,13 @@ proc part1(parsed: Parsed): int =
 
 func part2(parsed: Parsed): int =
   moveRope(parsed, 10)
-  
+
 
 func moveRope(parsed: Parsed, knots: int): int =
   var
     coords = toSeq(1..knots).map(x => (0, 0).Coord)
     visited = toHashSet [coords[^1]]
-  
+
   for (dir, amount) in parsed:
     for _ in 0..<amount:
       coords[0].move dir
@@ -73,12 +72,12 @@ func parseDir(str: string): Dir =
     of "D": down
     else: raise newException(ValueError, "Wrong dir '%s'" % [str])
 
+
 when isMainModule:
-  let parsed = parse("input")
-  # echo parsed
   let
+    parsed = parse("input")
     p1 = part1 parsed
     p2 = part2 parsed
-  
+
   echo fmt"Part1: {p1}"
   echo fmt"Part2: {p2}"
