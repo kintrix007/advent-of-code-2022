@@ -1,7 +1,6 @@
 import strutils, strformat
 import sequtils
 import std/sets
-import sugar
 import fusion/matching
 
 type
@@ -25,7 +24,7 @@ func part2(parsed: Parsed): int =
 
 func moveRope(parsed: Parsed, knots: int): int =
   var
-    coords = toSeq(1..knots).map(x => (0, 0).Coord)
+    coords = toSeq(1..knots).mapIt((0, 0).Coord)
     visited = toHashSet [coords[^1]]
 
   for (dir, amount) in parsed:
