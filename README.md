@@ -18,7 +18,8 @@ Try to solve every day in a different programming language and see how far I get
   use a bit more functionality.
 - **Day 7**: Bash - Well, given the way I chose to implement it, it could not have gone much worse this.
 - **Day 8**: Scratch - I took a break twice considering if I should just give up... But after all it ended up being kind of fun...?
-- **Day 9**: -
+- **Day 9**: Nim
+- **Day 10**: -
 
 ### Languages I plan to use in no particular order:
 - C
