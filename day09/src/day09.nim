@@ -16,7 +16,7 @@ func drag(head: Coord, tail: var Coord)
 func move(p: var Coord, dir: Dir)
 func moveRope(parsed: Parsed, knots: int): int
 
-proc part1(parsed: Parsed): int =
+func part1(parsed: Parsed): int =
   moveRope(parsed, 2)
 
 func part2(parsed: Parsed): int =
