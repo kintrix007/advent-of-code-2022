@@ -3,6 +3,7 @@ import strformat
 import sequtils
 import fusion/matching
 import std/sets
+import std/math
 # import sugar
 
 type
@@ -23,7 +24,6 @@ proc part1(parsed: Parsed): int =
   #? Those parentheses DO make a difference
   for (dir, amount) in parsed:
     for _ in 0..<amount:
-      let prev = h
       case dir:
         of up:    inc h.y
         of down:  dec h.y
@@ -33,12 +33,16 @@ proc part1(parsed: Parsed): int =
       let d = h.dist(t)
       
       if d > 1:
-        t = prev
+        t.x += clamp(h.x - t.x, -1, 1)
+        t.y += clamp(h.y - t.y, -1, 1)
         visited.incl t
       
-      echo fmt"H: {h:20}T: {t:20}dist: {d}"
+      # echo fmt"H: {h:20}T: {t:20}dist: {d}"
 
   visited.len
+
+proc part2(parsed: Parsed): int =
+  -1
 
 ## Weird implementation of dist for this problem
 func dist(p1, p2: Coord): int =
@@ -66,5 +70,7 @@ when isMainModule:
   # echo parsed
   let
     p1 = part1 parsed
+    p2 = part2 parsed
   
   echo fmt"Part1: {p1}"
+  echo fmt"Part2: {p2}"
