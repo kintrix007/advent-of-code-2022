@@ -11,63 +11,50 @@ type
   Dir = enum
     left, right, up, down
 
+proc parse(filename: string): Parsed
 func parseDir(str: string): Dir
-func dist(p1, p2: Coord): int
+func drag(head: Coord, tail: var Coord)
+func move(p: var Coord, dir: Dir)
+func moveRope(parsed: Parsed, knots: int): int
 
 proc part1(parsed: Parsed): int =
-  var 
-    h = (0, 0).Coord
-    t = (0, 0).Coord
-    visited = toHashSet [t]
+  moveRope(parsed, 2)
+
+func part2(parsed: Parsed): int =
+  moveRope(parsed, 10)
   
-  #? Those parentheses DO make a difference
-  for (dir, amount) in parsed:
-    for _ in 0..<amount:
-      case dir:
-        of up:    inc h.y
-        of down:  dec h.y
-        of right: inc h.x
-        of left:  dec h.x
-      
-      let d = h.dist(t)
-      
-      if d > 1:
-        t.x += clamp(h.x - t.x, -1, 1)
-        t.y += clamp(h.y - t.y, -1, 1)
-        visited.incl t
-      
-      # echo fmt"H: {h:20}T: {t:20}dist: {d}"
 
-  visited.len
-
-proc part2(parsed: Parsed): int =
+func moveRope(parsed: Parsed, knots: int): int =
   var
-    coords = toSeq(1..10).map(x => (0, 0).Coord)
+    coords = toSeq(1..knots).map(x => (0, 0).Coord)
     visited = toHashSet [coords[^1]]
   
   for (dir, amount) in parsed:
     for _ in 0..<amount:
-      case dir:
-        of up:    inc coords[0].y
-        of down:  dec coords[0].y
-        of right: inc coords[0].x
-        of left:  dec coords[0].x
-      
-      for i in 1..<coords.len:
-        let d = coords[i].dist(coords[i-1])
-        if d > 1:
-          coords[i].x += clamp(coords[i-1].x - coords[i].x, -1, 1)
-          coords[i].y += clamp(coords[i-1].y - coords[i].y, -1, 1)
+      coords[0].move dir
+      for i in 1..<knots:
+        coords[i-1].drag coords[i]
 
       visited.incl coords[^1]
-      
-      # echo fmt"H: {h:20}T: {t:20}dist: {d}"
 
   visited.len
 
-## Weird implementation of dist for this problem
 func dist(p1, p2: Coord): int =
+  ## Weird implementation of dist for this problem
   max(abs(p1.x-p2.x), abs(p1.y-p2.y))
+
+func drag(head: Coord, tail: var Coord) =
+  let d = head.dist(tail)
+  if d > 1:
+    tail.x += clamp(head.x - tail.x, -1, 1)
+    tail.y += clamp(head.y - tail.y, -1, 1)
+
+func move(p: var Coord, dir: Dir) =
+  case dir:
+    of up:    inc p.y
+    of down:  dec p.y
+    of right: inc p.x
+    of left:  dec p.x
 
 proc parse(filename: string): Parsed =
   let cont = filename.readFile().strip()
