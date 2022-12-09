@@ -3,8 +3,7 @@ import strformat
 import sequtils
 import fusion/matching
 import std/sets
-import std/math
-# import sugar
+import sugar
 
 type
   Coord = tuple[x: int, y: int]
@@ -42,7 +41,29 @@ proc part1(parsed: Parsed): int =
   visited.len
 
 proc part2(parsed: Parsed): int =
-  -1
+  var
+    coords = toSeq(1..10).map(x => (0, 0).Coord)
+    visited = toHashSet [coords[^1]]
+  
+  for (dir, amount) in parsed:
+    for _ in 0..<amount:
+      case dir:
+        of up:    inc coords[0].y
+        of down:  dec coords[0].y
+        of right: inc coords[0].x
+        of left:  dec coords[0].x
+      
+      for i in 1..<coords.len:
+        let d = coords[i].dist(coords[i-1])
+        if d > 1:
+          coords[i].x += clamp(coords[i-1].x - coords[i].x, -1, 1)
+          coords[i].y += clamp(coords[i-1].y - coords[i].y, -1, 1)
+
+      visited.incl coords[^1]
+      
+      # echo fmt"H: {h:20}T: {t:20}dist: {d}"
+
+  visited.len
 
 ## Weird implementation of dist for this problem
 func dist(p1, p2: Coord): int =
