@@ -9,46 +9,49 @@ type alias Strength = Int
 main : Html.Html msg
 main =
     let
-        cmds = parse input
-        _ = Debug.log "dat" cmds
-        _ =  Debug.log "Part 1" <| part1 <| cmds
-        _ =  Debug.log "Part 2" <| part2 <| cmds
+        cmds = List.map parseLine <| String.lines <| String.trim input
+        _ = Debug.log "Part 1" <| part1 cmds
+        _ = "Part2:\n" ++ part2 cmds |> String.split "\n"
+            |> List.reverse
+            |> List.map(Debug.log "")
     in
         text "Hello, World!"
 
 part1 : List Command -> Int
 part1 cmds =
-    executeAll cmds 0 1
+    let (_, _, s) = List.foldl f (0, 1, 0) cmds
+        f = \cmd (tick, x, str) -> execute1 cmd tick x str
+    in s
 
-part2 : List Command -> Int
-part2 data = -1
+part2 : List Command -> String
+part2 cmds =
+    let (_, _, s) = List.foldl f (0, 1, "") cmds
+        f = \cmd (tick, x, str) -> execute2 cmd tick x str
+    in s
 
-executeAll : List Command -> Tick -> Int -> Int
-executeAll cmds tick x =
-    case cmds of
-        [] -> 0
-        cmd::rest ->
-            let
-                (newTick, newX, str) = execute cmd tick x 0
-                _ = Debug.log "str" str
-            in
-                str + executeAll rest newTick newX
+execute1 : Command -> Tick -> Int -> Strength -> (Tick, Int, Strength)
+execute1 cmd tick x str =
+    let apply n t x_ s vs =
+            let mod = modBy 40 (t-20)
+            in (t, x_+n, s + if List.member mod vs then (t-mod)*x else 0)
+    in case cmd of
+        Noop -> apply 0 (tick+1) x str [0]
+        AddX n -> apply n (tick+2) x str [0, 1]
 
-execute : Command -> Tick -> Int -> Strength -> (Tick, Int, Strength)
-execute cmd tick x str =
+execute2 : Command -> Tick -> Int -> String -> (Tick, Int, String)
+execute2 cmd tick x str =
     case cmd of
         Noop ->
-            let newTick = tick+1
-            in (newTick, x, if modBy 40 (newTick-20) == 0 then newTick*x else str)
+            let mod1 = modBy 40 tick
+                mod2 = modBy 40 (tick+1)
+            in (tick+1, x, str ++ (if List.member (abs (mod1-x)) [0, 1] then "#" else " ") ++ if mod2 == 0 then "\n" else "")
         AddX n ->
-            let newTick = tick+2
-                mod = modBy 40 (newTick-20)
-            in (newTick, x+n, if mod == 0 || mod == 1 then (newTick-mod)*x else str)
-
-
-parse : String -> List Command
-parse str =
-    List.map parseLine <| String.lines str
+            let mod1 = modBy 40 tick
+                mod2 = modBy 40 (tick+1)
+                mod3 = modBy 40 (tick+2)
+                s1 = (if (abs (mod1-x)) <= 1 then "#" else " ") ++ if mod2 == 0 then "\n" else ""
+                s2 = (if (abs (mod2-x)) <= 1 then "#" else " ") ++ if mod3 == 0 then "\n" else ""
+            in (tick+2, x+n, str ++ s1 ++ s2)
 
 parseLine : String -> Command
 parseLine l =
@@ -59,7 +62,7 @@ parseLine l =
             _ -> Noop
 
 input : String
-input = String.trim """
+input = """
 addx 1
 noop
 addx 4
