@@ -1,6 +1,6 @@
 module Main exposing (..)
 
-import Html exposing (text)
+import Html
 
 type Command = Noop | AddX Int
 type alias Tick = Int
@@ -9,13 +9,13 @@ type alias Strength = Int
 main : Html.Html msg
 main =
     let
-        cmds = List.map parseLine <| String.lines <| String.trim input
-        _ = Debug.log "Part 1" <| part1 cmds
+        cmds = input |> String.lines |> List.filterMap parseLine
+        _ = part1 cmds |> Debug.log "Part 1"
         _ = "Part2:\n" ++ part2 cmds |> String.split "\n"
             |> List.reverse
-            |> List.map(Debug.log "")
+            |> List.map (Debug.log "")
     in
-        text "Hello, World!"
+        Html.text "Hello, World!"
 
 part1 : List Command -> Int
 part1 cmds =
@@ -40,26 +40,18 @@ execute1 cmd tick x str =
 
 execute2 : Command -> Tick -> Int -> String -> (Tick, Int, String)
 execute2 cmd tick x str =
-    case cmd of
-        Noop ->
-            let mod1 = modBy 40 tick
-                mod2 = modBy 40 (tick+1)
-            in (tick+1, x, str ++ (if List.member (abs (mod1-x)) [0, 1] then "#" else " ") ++ if mod2 == 0 then "\n" else "")
-        AddX n ->
-            let mod1 = modBy 40 tick
-                mod2 = modBy 40 (tick+1)
-                mod3 = modBy 40 (tick+2)
-                s1 = (if (abs (mod1-x)) <= 1 then "#" else " ") ++ if mod2 == 0 then "\n" else ""
-                s2 = (if (abs (mod2-x)) <= 1 then "#" else " ") ++ if mod3 == 0 then "\n" else ""
-            in (tick+2, x+n, str ++ s1 ++ s2)
+    let mod k = modBy 40 (tick+k)
+        chk k = (if (abs (mod k-x)) <= 1 then "##" else "  ") ++ if mod (k+1) == 0 then "\n" else ""
+    in case cmd of
+        Noop -> (tick+1, x, str ++ chk 0)
+        AddX n -> (tick+2, x+n, str ++ chk 0 ++ chk 1)
 
-parseLine : String -> Command
+parseLine : String -> Maybe Command
 parseLine l =
-    case l of
-        "noop" -> Noop
-        x -> case String.split " " x of 
-            [_, amount] -> AddX <| Maybe.withDefault 0 <| String.toInt amount
-            _ -> Noop
+    case String.split " " l of
+        ["noop"] -> Just Noop
+        ["addx", amount] -> Just <| AddX <| Maybe.withDefault 0 <| String.toInt amount
+        _ -> Nothing
 
 input : String
 input = """
