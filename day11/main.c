@@ -7,9 +7,26 @@
 int main() {
     size_t size;
     struct Monkey **monkeys = parse("input", &size);
-    UNUSED(monkeys);
+    
+    int p1 = part1(monkeys);
+    int p2 = part2(monkeys);
+    printf("Part 1: %d\nPart 2: %d\n", p1, p2);
+
+    for (size_t i = 0; i < size; i++) {
+        free(monkeys[i]);
+    }
+    free(monkeys);
 }
 
+int part1(struct Monkey **monkeys) {
+    UNUSED(monkeys);
+    return -1;
+}
+
+int part2(struct Monkey **monkeys) {
+    UNUSED(monkeys);
+    return -1;
+}
 
 struct Monkey **parse(char *filename, size_t *size) {
     FILE *file = fopen(filename, "r");
@@ -34,12 +51,14 @@ struct Monkey **parse(char *filename, size_t *size) {
 }
 
 struct Monkey *parseMonkey(FILE *file) {
-    struct Monkey *monkey = malloc(sizeof(struct Monkey));
+    struct Monkey *monkey = NULL;
     int monkeyNum = -1;
 
     fscanf(file, "Monkey %d:\n", &monkeyNum);
     if (monkeyNum == -1) return NULL;
     fscanf(file, "  Starting items:");
+
+    monkey = malloc(sizeof(struct Monkey));
 
     monkey->itemCount = 0;
     char term = ',';

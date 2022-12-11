@@ -25,4 +25,7 @@ struct Monkey {
 struct Monkey *parseMonkey(FILE *file);
 struct Monkey **parse(char *filename, size_t *size);
 
+int part1(struct Monkey **monkeys);
+int part2(struct Monkey **monkeys);
+
 #endif
