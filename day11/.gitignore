@@ -1,0 +1,8 @@
+# Resulting binary
+app.out
+
+# Object files
+*.o
+
+# VSCode
+.vscode
