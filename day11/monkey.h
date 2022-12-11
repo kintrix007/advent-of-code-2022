@@ -6,6 +6,8 @@
 
 #define UNUSED(v) ((void)v)
 
+typedef signed long long SLL;
+
 enum Operation {
     ADD,
     MUL,
@@ -13,7 +15,7 @@ enum Operation {
 };
 
 struct Monkey {
-    int items[50];
+    SLL items[50];
     size_t size;
     enum Operation op;
     int param;
@@ -26,10 +28,8 @@ struct Monkey *parseMonkey(FILE *file);
 
 struct Monkey **parse(char *filename, size_t *size);
 
-int part1(struct Monkey **monkeys, size_t size);
+int solve(struct Monkey **monkeys, size_t size, int iteration, int shouldDivide);
 
-int part2(struct Monkey **monkeys, size_t size);
-
-int inspectItem(struct Monkey *m, int *item);
+int inspectItem(struct Monkey *m, SLL *item, int shouldDivide);
 
 #endif

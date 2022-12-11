@@ -9,9 +9,8 @@ int main() {
     size_t size;
     struct Monkey **monkeys = parse("input", &size);
     
-    int p1 = part1(monkeys, size);
-    int p2 = part2(monkeys, size);
-    printf("Part 1: %d\nPart 2: %d\n", p1, p2);
+    solve(monkeys, size, 20, 1);
+    solve(monkeys, size, 10000, 0);
 
     for (size_t i = 0; i < size; i++) {
         free(monkeys[i]);
@@ -19,17 +18,23 @@ int main() {
     free(monkeys);
 }
 
-int part1(struct Monkey **monkeys, size_t size) {
+int solve(struct Monkey **monkeys, size_t size, int iterations, int shouldDivide) {
     int inspected[size];
     for (size_t i = 0; i < size; i++) inspected[i] = 0;
+
+    SLL product = 1;
+    for (size_t i = 0; i < size; i++) product *= monkeys[i]->testDiv;
+
+    // printf("%lld\n", product*product); //* Does not overflow. Yay
     
-    for (int iter = 0; iter < 20; iter++) {
+    for (int iter = 0; iter < iterations; iter++) {
         for (size_t mIdx = 0; mIdx < size; mIdx++) {
             struct Monkey *m = monkeys[mIdx];
 
             for (size_t i = 0; i < m->size; i++) {
-                int item = m->items[i];
-                int targetIdx = inspectItem(m, &item);
+                SLL item = m->items[i];
+                int targetIdx = inspectItem(m, &item, shouldDivide);
+                item %= product;
                 inspected[mIdx]++;
                 struct Monkey *targetMonkey = monkeys[targetIdx];
                 targetMonkey->items[targetMonkey->size] = item;
@@ -46,20 +51,14 @@ int part1(struct Monkey **monkeys, size_t size) {
     return -1;
 }
 
-int part2(struct Monkey **monkeys, size_t size) {
-    UNUSED(monkeys);
-    UNUSED(size);
-    return -1;
-}
-
-int inspectItem(struct Monkey *m, int *item) {
+int inspectItem(struct Monkey *m, SLL *item, int shouldDivide) {
     switch (m->op) {
         case ADD: *item += m->param; break;
         case MUL: *item *= m->param; break;
         case SQUARE: *item *= *item; break;
         default: assert(0);
     }
-    *item /= 3;
+    if (shouldDivide) *item /= 3;
 
     if (*item % m->testDiv == 0) return m->trueTarget;
 
@@ -102,7 +101,7 @@ struct Monkey *parseMonkey(FILE *file) {
     char term = ',';
     // printf("Items: ");
     for (int i = 0; term != '\n'; i++) {
-        fscanf(file, " %d%c", monkey->items + i, &term);
+        fscanf(file, " %lld%c", monkey->items + i, &term);
         monkey->size++;
         // printf("%d ", monkey->items[i]);
     }
