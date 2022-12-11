@@ -1,5 +1,5 @@
 app = app.out
-CFLAGS = -std=c11 -ggdb3 -Wall -Wextra -Werror -Wpedantic -Wnull-dereference
+CFLAGS = -std=c11 -no-pie -ggdb3 -Wall -Wextra -Werror -Wpedantic -Wnull-dereference
 
 .PHONY: run clean valgrind
 

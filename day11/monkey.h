@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stddef.h>
 
-#define UNUSED(v) (void)v
+#define UNUSED(v) ((void)v)
 
 enum Operation {
     ADD,
@@ -14,7 +14,7 @@ enum Operation {
 
 struct Monkey {
     int items[50];
-    size_t itemCount;
+    size_t size;
     enum Operation op;
     int param;
     int testDiv;
@@ -23,9 +23,13 @@ struct Monkey {
 };
 
 struct Monkey *parseMonkey(FILE *file);
+
 struct Monkey **parse(char *filename, size_t *size);
 
-int part1(struct Monkey **monkeys);
-int part2(struct Monkey **monkeys);
+int part1(struct Monkey **monkeys, size_t size);
+
+int part2(struct Monkey **monkeys, size_t size);
+
+int inspectItem(struct Monkey *m, int *item);
 
 #endif
