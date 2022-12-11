@@ -20,7 +20,8 @@ Try to solve every day in a different programming language and see how far I get
 - **Day 8**: Scratch - I took a break twice considering if I should just give up... But after all it ended up being kind of fun...?
 - **Day 9**: Nim - It was a ton of fun. I want to do more Nim.
 - **Day 10**: Elm - I-... I am just going to hate on this language for how poorly I wrote the code.
-- **Day 11**: -
+- **Day 11**: C - This was a lot more fun than expected. And as far as I know, there are not memory leaks!
+- **Day 12**: -
 
 ### Languages I plan to use in no particular order:
 - C
