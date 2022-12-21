@@ -22,6 +22,7 @@ Try to solve every day in a different programming language and see how far I get
 - **Day 10**: Elm - I-... I am just going to hate on this language for how poorly I wrote the code.
 - **Day 11**: C - This was a lot more fun than expected. And as far as I know, there are not memory leaks!
 - **Day 12**: -
+- **Day 21**: TypeScript - Yup, I still like TS. Although, this one probably would have been nicer in a functional language.
 
 ### Languages I plan to use in no particular order:
 - C
