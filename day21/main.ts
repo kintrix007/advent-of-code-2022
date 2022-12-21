@@ -16,37 +16,35 @@ type Monkeys = {
 function main(): void {
     const monkeys = parse("input");
 
-    const p1 = part1(monkeys);
+    const p1 = calcNumber(monkeys, "root");
     console.log(`Part 1: ${p1}`);
 
     monkeys["humn"] = NaN;
     const chain = getChainToHuman(monkeys, "root");
-    const root = monkeys[chain.pop()!]!;
+    chain.pop();
     
-    if (typeof root === "number") throw new Error("Root just has a number");
+    const root = monkeys["root"]!;
+    if (typeof root === "number") throw new Error("Root is a number instead of an operation");
 
     const target = calcNumber(monkeys, (root.a === chain[chain.length-1]! ? root.b : root.a));
-    const p2 = part2(monkeys, chain, chain.pop()!, target);
+    const p2 = humanNumber(monkeys, chain, chain.pop()!, target);
     console.log(`Part 2: ${p2}`);
 }
 
-function part2(monkeys: Monkeys, chain: string[], monkeyName: string, target: number): number {
+function humanNumber(monkeys: Monkeys, chain: string[], monkeyName: string, target: number): number {
     if (monkeyName === "humn") return target;
-    
     const m = monkeys[monkeyName];
     if (m === undefined) throw new Error(`Monkey '${monkeyName}' does not exist`);
     if (typeof m === "number") throw new Error(`Monkey '${monkeyName}' has a number instead of an operation`);
 
-
-    const nextName = chain.pop()!;
     const a = calcNumber(monkeys, m.a);
     const b = calcNumber(monkeys, m.b);
     // console.log({a, op: m.op, b, target});
-    const newTarget = getNewTarget(a, m.op, b, target);
-    return part2(monkeys, chain, nextName, newTarget);
+    const newTarget = inverse(a, m.op, b, target);
+    return humanNumber(monkeys, chain, chain.pop()!, newTarget);
 }
 
-function getNewTarget(a: number, op: Operator, b: number, res: number): number {
+function inverse(a: number, op: Operator, b: number, res: number): number {
     switch (op) {
         case "+":
             if (isNaN(a))      return res - b;
@@ -55,7 +53,7 @@ function getNewTarget(a: number, op: Operator, b: number, res: number): number {
         case "-":
             if (isNaN(a))      return res + b;
             else if (isNaN(b)) return a - res;
-            return getNewTarget(-a, "+", b, res);
+            throw new Error(`Something went wrong doing the inverse of '${op}'`);
         case "*":
             if (isNaN(a))      return res / b;
             else if (isNaN(b)) return res / a;
@@ -67,10 +65,6 @@ function getNewTarget(a: number, op: Operator, b: number, res: number): number {
         default:
             throw new Error(`Something went wrong doing the inverse of '${op}'`);
     }
-}
-
-function part1(monkeys: Monkeys): number {
-    return calcNumber(monkeys, "root");
 }
 
 function calcNumber(monkeys: Monkeys, monkeyName: string): number {
@@ -110,7 +104,7 @@ function doOperation(a: number, op: Operator, b: number) {
 
 
 function parse(filename: string): Monkeys {
-    const cont: {} = yaml.parse(fs.readFileSync("input").toString());
+    const cont: {} = yaml.parse(fs.readFileSync(filename).toString());
 
     const result: Monkeys = Object.fromEntries(Object.entries(cont).map(([k, v]) => {
         switch (typeof v) {
