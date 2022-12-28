@@ -7,52 +7,77 @@ import (
 	"strings"
 )
 
-// Enum Tile
 type (
-	Tile  int32
-	Table [][]Tile
+	Coord struct {
+		x, y int
+	}
+	Table map[Coord]bool
 )
 
-const (
-	Empty Tile = iota
-	Elf
-)
+func (t Table) String() (res string) {
+	min, max := t.Area()
 
-func (t Table) String() (s string) {
-	for _, row := range t {
-		for _, x := range row {
-			switch x {
-			case Elf:
-				s += "#"
-			case Empty:
-				s += "."
+	for y := min.y; y <= max.y; y++ {
+		for x := min.x; x <= max.x; x++ {
+			switch (t[Coord{x, y}]) {
+			case true:
+				res += "#"
+			case false:
+				res += "."
 			}
 		}
-		s += "\n"
+		res += "\n"
 	}
-
 	return
 }
 
-func parse(f *os.File) (table Table) {
+func (t Table) Area() (min, max Coord) {
+	isUnset := true
+	for coord, v := range t {
+		if !v {
+			continue
+		}
+		if isUnset {
+			min = coord
+			max = coord
+			isUnset = false
+			continue
+		}
+		if coord.x < min.x {
+			min.x = coord.x
+		}
+		if coord.x > max.x {
+			max.x = coord.x
+		}
+		if coord.y < min.y {
+			min.y = coord.y
+		}
+		if coord.y > max.y {
+			max.y = coord.y
+		}
+	}
+	return
+}
+
+func parse(f *os.File) Table {
+	set := map[Coord]bool{}
 	cont, _ := readContents(f)
 	lines := strings.Split(strings.Trim(cont, "\n"), "\n")
 
 	for y, s := range lines {
-		table = append(table, make([]Tile, len(s)))
 		for x, r := range s {
 			switch r {
-			case '.':
-				table[y][x] = Empty
 			case '#':
-				table[y][x] = Elf
+				c := Coord{x, y}
+				set[c] = true
+			case '.':
 			default:
 				panic(fmt.Sprintf("Unexpected rune: '%c'", r))
 			}
 		}
 	}
 
-	return
+	return set
 }
 
 func readContents(f *os.File) (res string, err error) {
@@ -82,5 +107,10 @@ func main() {
 	}
 
 	parsed := parse(f)
+	fmt.Println(parsed.Area())
+	fmt.Println(parsed)
+	parsed[Coord{103, 32}] = true
+	parsed[Coord{-4, 32}] = true
+	fmt.Println(parsed.Area())
 	fmt.Println(parsed)
 }
