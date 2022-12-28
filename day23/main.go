@@ -30,7 +30,6 @@ func part1(t Table) int {
 	for i := 0; i < 10; i++ {
 		t = iterTable(t, directionOrder)
 		directionOrder = append(directionOrder[1:], directionOrder[0])
-		// fmt.Println("Round", i+1, "\n"+t.String())
 	}
 
 	emptyTileCount := 0
@@ -38,9 +37,7 @@ func part1(t Table) int {
 
 	for y := min.y; y <= max.y; y++ {
 		for x := min.x; x <= max.x; x++ {
-			switch (t[Coord{x, y}]) {
-			case true:
-			case false:
+			if _, ok := t[Coord{x, y}]; !ok {
 				emptyTileCount++
 			}
 		}
@@ -50,9 +47,7 @@ func part1(t Table) int {
 }
 
 func iterTable(t Table, directionOrder []Direction) Table {
-	isTargetToCoord := map[Coord]bool{}
 	targetToCoord := map[Coord]Coord{}
-	isCoordToTarget := map[Coord]bool{}
 	coordToTarget := map[Coord]Coord{}
 
 	for coord, v := range t {
@@ -61,23 +56,16 @@ func iterTable(t Table, directionOrder []Direction) Table {
 		}
 		dir := getMoveDirection(t, coord, directionOrder)
 		target := coord.Add(dir.ToCoord())
-		if isTargetToCoord[target] {
-			from := targetToCoord[target]
-			isCoordToTarget[from] = false
+		if from, ok := targetToCoord[target]; ok {
+			delete(coordToTarget, from)
 			continue
 		}
-		isTargetToCoord[target] = true
 		targetToCoord[target] = coord
-		isCoordToTarget[coord] = true
 		coordToTarget[coord] = target
 	}
 
-	for coord, v := range isCoordToTarget {
-		if !v {
-			continue
-		}
-		target := coordToTarget[coord]
-		t[coord] = false
+	for coord, target := range coordToTarget {
+		delete(t, coord)
 		t[target] = true
 	}
 
@@ -154,10 +142,9 @@ func (t Table) String() string {
 
 	for y := min.y; y <= max.y; y++ {
 		for x := min.x; x <= max.x; x++ {
-			switch (t[Coord{x, y}]) {
-			case true:
+			if _, ok := t[Coord{x, y}]; ok {
 				sb.WriteRune('#')
-			case false:
+			} else {
 				sb.WriteRune('.')
 			}
 		}
@@ -168,16 +155,14 @@ func (t Table) String() string {
 
 func (t Table) Area() (min, max Coord) {
 	isUnset := true
-	for coord, v := range t {
-		if !v {
-			continue
-		}
+	for coord := range t {
 		if isUnset {
 			min = coord
 			max = coord
 			isUnset = false
 			continue
 		}
+
 		if coord.x < min.x {
 			min.x = coord.x
 		}
@@ -194,8 +179,8 @@ func (t Table) Area() (min, max Coord) {
 	return
 }
 
-func parse(f *os.File) Table {
-	set := map[Coord]bool{}
+func parse(f *os.File) (t Table, err error) {
+	t = Table{}
 	cont, _ := readContents(f)
 	lines := strings.Split(strings.Trim(cont, "\n"), "\n")
 
@@ -204,15 +189,15 @@ func parse(f *os.File) Table {
 			switch r {
 			case '#':
 				c := Coord{x, y}
-				set[c] = true
+				t[c] = true
 			case '.':
 			default:
-				panic(fmt.Sprintf("Unexpected rune: '%c'", r))
+				return Table{}, fmt.Errorf("Unexpected rune: '%c'", r)
 			}
 		}
 	}
 
-	return set
+	return
 }
 
 func readContents(f *os.File) (res string, err error) {
@@ -239,8 +224,11 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	table, err := parse(f)
+	if err != nil {
+		panic(err)
+	}
 
-	table := parse(f)
 	p1 := part1(table)
 	println("Part1:", p1)
 }
