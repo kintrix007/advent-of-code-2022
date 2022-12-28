@@ -24,36 +24,47 @@ const (
 	East
 )
 
-func part1(t Table) int {
+func solve(t Table) (emptyTiles, lastRound int) {
+	defer func() { lastRound++ }()
+
 	directionOrder := []Direction{North, South, West, East}
 
-	for i := 0; i < 10; i++ {
-		t = iterTable(t, directionOrder)
-		directionOrder = append(directionOrder[1:], directionOrder[0])
+	for ; lastRound < 10; lastRound++ {
+		t, directionOrder = doIteration(t, directionOrder)
 	}
 
-	emptyTileCount := 0
 	min, max := t.Area()
 
 	for y := min.y; y <= max.y; y++ {
 		for x := min.x; x <= max.x; x++ {
 			if _, ok := t[Coord{x, y}]; !ok {
-				emptyTileCount++
+				emptyTiles++
 			}
 		}
 	}
 
-	return emptyTileCount
+	for ; !allStay(t, directionOrder); lastRound++ {
+		t, directionOrder = doIteration(t, directionOrder)
+	}
+
+	return
 }
 
-func iterTable(t Table, directionOrder []Direction) Table {
+func allStay(t Table, directionOrder []Direction) bool {
+	for coord := range t {
+		dir := getMoveDirection(t, coord, directionOrder)
+		if dir != Stay {
+			return false
+		}
+	}
+	return true
+}
+
+func doIteration(t Table, directionOrder []Direction) (Table, []Direction) {
 	targetToCoord := map[Coord]Coord{}
 	coordToTarget := map[Coord]Coord{}
 
-	for coord, v := range t {
-		if !v {
-			continue
-		}
+	for coord := range t {
 		dir := getMoveDirection(t, coord, directionOrder)
 		target := coord.Add(dir.ToCoord())
 		if from, ok := targetToCoord[target]; ok {
@@ -69,7 +80,7 @@ func iterTable(t Table, directionOrder []Direction) Table {
 		t[target] = true
 	}
 
-	return t
+	return t, append(directionOrder[1:], directionOrder[0])
 }
 
 func getMoveDirection(t Table, coord Coord, directionOrder []Direction) (res Direction) {
@@ -229,6 +240,7 @@ func main() {
 		panic(err)
 	}
 
-	p1 := part1(table)
+	p1, p2 := solve(table)
 	println("Part1:", p1)
+	println("Part1:", p2)
 }
