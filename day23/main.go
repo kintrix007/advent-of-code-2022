@@ -148,21 +148,22 @@ func (a Coord) Add(b Coord) (res Coord) {
 	return
 }
 
-func (t Table) String() (res string) {
+func (t Table) String() string {
 	min, max := t.Area()
+	var sb strings.Builder
 
 	for y := min.y; y <= max.y; y++ {
 		for x := min.x; x <= max.x; x++ {
 			switch (t[Coord{x, y}]) {
 			case true:
-				res += "#"
+				sb.WriteRune('#')
 			case false:
-				res += "."
+				sb.WriteRune('.')
 			}
 		}
-		res += "\n"
+		sb.WriteRune('\n')
 	}
-	return
+	return sb.String()
 }
 
 func (t Table) Area() (min, max Coord) {
@@ -225,7 +226,6 @@ func readContents(f *os.File) (res string, err error) {
 			}
 			return sb.String(), err
 		}
-		sb.Grow(n)
 		sb.Write(b[:n])
 	}
 
